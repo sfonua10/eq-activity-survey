@@ -125,7 +125,7 @@ export default function SurveyPage() {
             {activities === undefined ? (
               <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-[100px] animate-pulse rounded-xl bg-border-light" />
+                  <div key={i} className="h-[100px] animate-pulse rounded-sm bg-border-light" />
                 ))}
               </div>
             ) : (
@@ -161,14 +161,14 @@ export default function SurveyPage() {
             onChange={(e) => setName(e.target.value)}
             placeholder="Your name (optional)"
             autoComplete="name"
-            className="w-full rounded-lg bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-shadow"
+            className="w-full rounded-sm bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-shadow"
           />
 
           {/* Submit */}
           <button
             type="submit"
             disabled={submitting || (selectedIds.size === 0 && !suggestion.trim())}
-            className="w-full rounded-lg bg-secondary py-4 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition-all duration-200 hover:bg-secondary-hover active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed min-h-[56px]"
+            className="w-full rounded-sm bg-secondary py-4 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition-all duration-200 hover:bg-secondary-hover active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed min-h-[56px]"
           >
             {submitting ? 'Sending...' : 'Done'}
           </button>

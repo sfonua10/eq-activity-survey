@@ -21,15 +21,15 @@
   --color-secondary-active: #003057;
   --color-secondary-light: #E6F3F7;
 
-  --color-success: #2D862D;
+  --color-success: #64A53D;
   --color-success-light: #E8F5E8;
-  --color-error: #C4314B;
+  --color-error: #b00504;
 
   --color-border: #D1D3D4;
   --color-border-light: #EFF0F0;
 
-  --font-family-serif: 'Source Serif 4', Georgia, serif;
-  --font-family-sans: 'Source Sans 3', system-ui, sans-serif;
+  --font-family-serif: 'Noto Serif', Georgia, serif;
+  --font-family-sans: 'Roboto', Arial, sans-serif;
 }
 
 @layer base {

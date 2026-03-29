@@ -25,7 +25,7 @@ export default function SuggestionInput({ value, onChange }: SuggestionInputProp
           onChange={(e) => onChange(e.target.value)}
           placeholder="Suggest an activity..."
           rows={2}
-          className="mt-1 w-full rounded-lg bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary resize-none transition-shadow"
+          className="mt-1 w-full rounded-sm bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary resize-none transition-shadow"
         />
       )}
     </div>

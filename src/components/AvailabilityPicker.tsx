@@ -18,7 +18,7 @@ export default function AvailabilityPicker({ selected, onToggleSlot, onToggleDay
             <button
               type="button"
               onClick={() => onToggleSlot(slot.id)}
-              className={`w-full rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 text-left
+              className={`w-full rounded-sm px-4 py-2 text-sm font-medium transition-all duration-200 active:scale-95 text-left
                 ${isSelected
                   ? 'bg-secondary text-white shadow-sm'
                   : 'bg-white border border-border text-text-secondary shadow-sm hover:border-secondary/40 hover:shadow-md'

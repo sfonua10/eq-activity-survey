@@ -10,7 +10,7 @@ export default function ActivityCard({ name, emoji, selected, onToggle }: Activi
     <button
       type="button"
       onClick={onToggle}
-      className={`relative flex flex-col items-center justify-center gap-1.5 rounded-xl p-4 text-center transition-all duration-200 min-h-[100px] w-full active:scale-95
+      className={`relative flex flex-col items-center justify-center gap-1.5 rounded-sm p-4 text-center transition-all duration-200 min-h-[100px] w-full active:scale-95
         ${selected
           ? 'bg-primary-light border-2 border-primary/30 shadow-md'
           : 'bg-white border border-border-light shadow-sm hover:shadow-md hover:border-border'

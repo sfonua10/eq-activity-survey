@@ -20,7 +20,7 @@ export default function QRCodeDisplay({ url }: QRCodeDisplayProps) {
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="rounded-2xl bg-white p-5">
+      <div className="rounded-sm bg-white p-5">
         <QRCodeSVG value={url} size={160} />
       </div>
       <button
