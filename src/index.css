@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #FAF7F2;
+  --color-bg-card: #FFFFFF;
+  --color-text: #2D2A26;
+  --color-text-muted: #8A8479;
+  --color-accent: #C2572A;
+  --color-accent-light: #FDF0EB;
+  --color-accent-hover: #A8461F;
+  --color-success: #4A7C59;
+  --color-border: #EDE8E0;
+
+  --font-family-serif: 'DM Serif Display', Georgia, serif;
+  --font-family-sans: 'DM Sans', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-family-sans);
+    -webkit-tap-highlight-color: transparent;
+    color: var(--color-text);
+    background-color: var(--color-bg);
+  }
+  body {
+    margin: 0;
+  }
+}
