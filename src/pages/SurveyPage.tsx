@@ -4,7 +4,6 @@ import { useQuery, useMutation } from 'convex/react'
 import { api } from '../../convex/_generated/api'
 import ActivityCard from '../components/ActivityCard'
 import AvailabilityPicker from '../components/AvailabilityPicker'
-import SuggestionInput from '../components/SuggestionInput'
 
 export default function SurveyPage() {
   const navigate = useNavigate()
@@ -15,6 +14,7 @@ export default function SurveyPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [availability, setAvailability] = useState<Map<string, Set<string>>>(new Map())
   const [suggestion, setSuggestion] = useState('')
+  const [showSuggestion, setShowSuggestion] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [errors, setErrors] = useState<{ activities?: string }>({})
@@ -139,9 +139,38 @@ export default function SurveyPage() {
                     onToggle={() => toggleActivity(activity._id)}
                   />
                 ))}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (showSuggestion) setSuggestion('')
+                    setShowSuggestion((v) => !v)
+                  }}
+                  className={`relative flex flex-col items-center justify-center gap-1.5 rounded-sm p-4 text-center transition-all duration-200 min-h-[100px] w-full active:scale-95
+                    ${showSuggestion
+                      ? 'bg-primary-light border-2 border-dashed border-primary/40 shadow-md'
+                      : 'bg-white border border-dashed border-border-light shadow-sm hover:shadow-md hover:border-border'
+                    }`}
+                >
+                  <span className={`text-4xl leading-none transition-transform duration-200 ${showSuggestion ? 'scale-110' : ''}`}>
+                    💡
+                  </span>
+                  <span className={`text-xs font-semibold leading-tight ${showSuggestion ? 'text-primary' : 'text-text-secondary'}`}>
+                    Other idea?
+                  </span>
+                </button>
               </div>
             )}
-            <SuggestionInput value={suggestion} onChange={setSuggestion} />
+            <div className={`grid transition-[grid-template-rows] duration-200 ${showSuggestion ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'}`}>
+              <div className="overflow-hidden">
+                <textarea
+                  value={suggestion}
+                  onChange={(e) => setSuggestion(e.target.value)}
+                  placeholder="Suggest an activity..."
+                  rows={2}
+                  className="mt-2 w-full rounded-sm bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary resize-none transition-shadow"
+                />
+              </div>
+            </div>
           </section>
 
           {/* Availability */}
