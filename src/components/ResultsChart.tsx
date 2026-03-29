@@ -26,14 +26,14 @@ export default function ResultsChart({ activities, activityCounts, totalResponse
             <span className="text-2xl w-8 text-center flex-shrink-0">{activity.emoji}</span>
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline justify-between mb-1">
-                <span className="text-sm font-medium text-text truncate">{activity.name}</span>
+                <span className="text-sm font-semibold text-text truncate">{activity.name}</span>
                 <span className="text-xs text-text-muted ml-2 flex-shrink-0">
                   {activity.count} <span className="text-text-muted/60">({pct}%)</span>
                 </span>
               </div>
-              <div className="h-2 rounded-full bg-border overflow-hidden">
+              <div className="h-2 rounded-full bg-border-light overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-accent transition-all duration-700 ease-out"
+                  className="h-full rounded-full bg-primary transition-all duration-700 ease-out"
                   style={{ width: `${max > 0 ? (activity.count / max) * 100 : 0}%` }}
                 />
               </div>

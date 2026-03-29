@@ -13,7 +13,7 @@ export default function SurveyPage() {
 
   const [name, setName] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
-  const [availability, setAvailability] = useState<Set<string>>(new Set())
+  const [availability, setAvailability] = useState<Map<string, Set<string>>>(new Map())
   const [suggestion, setSuggestion] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -28,10 +28,29 @@ export default function SurveyPage() {
     setErrors((e) => ({ ...e, activities: undefined }))
   }
 
-  const toggleAvailability = (id: string) => {
+  const toggleAvailability = (slotId: string) => {
     setAvailability((prev) => {
-      const next = new Set(prev)
-      next.has(id) ? next.delete(id) : next.add(id)
+      const next = new Map(prev)
+      next.has(slotId) ? next.delete(slotId) : next.set(slotId, new Set())
+      return next
+    })
+  }
+
+  const toggleDay = (slotId: string, day: string) => {
+    setAvailability((prev) => {
+      const next = new Map(prev)
+      const excluded = new Set(next.get(slotId) ?? [])
+      if (excluded.has(day)) {
+        excluded.delete(day)
+      } else {
+        if (excluded.size >= 4) {
+          // All days would be excluded — deselect the slot entirely
+          next.delete(slotId)
+          return next
+        }
+        excluded.add(day)
+      }
+      next.set(slotId, excluded)
       return next
     })
   }
@@ -52,7 +71,10 @@ export default function SurveyPage() {
       await submitResponse({
         memberName: name.trim() || undefined,
         selectedActivityIds: Array.from(selectedIds) as any,
-        availability: Array.from(availability),
+        availability: Array.from(availability.entries()).map(([slotId, excluded]) => ({
+          slotId,
+          excludedDays: excluded.size > 0 ? Array.from(excluded) : undefined,
+        })),
         suggestedActivity: suggestion.trim() || undefined,
       })
       setSubmitted(true)
@@ -64,17 +86,17 @@ export default function SurveyPage() {
 
   if (submitted) {
     return (
-      <div className="flex min-h-screen items-center justify-center px-4">
+      <div className="flex min-h-screen items-center justify-center px-4 bg-gradient-to-b from-primary-light to-white">
         <div className="text-center">
-          <div className="mb-4 flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-success/10">
-            <svg className="h-8 w-8 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <div className="mb-4 flex h-16 w-16 mx-auto items-center justify-center rounded-full bg-primary/10">
+            <svg className="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="font-serif text-2xl text-text">
+          <h2 className="font-serif text-2xl font-bold text-primary">
             {name.trim() ? `Thanks, ${name.trim().split(' ')[0]}!` : 'Thanks!'}
           </h2>
-          <p className="mt-2 text-sm text-text-muted">Redirecting to results...</p>
+          <p className="mt-2 text-sm text-text-secondary">Redirecting to results...</p>
         </div>
       </div>
     )
@@ -82,11 +104,14 @@ export default function SurveyPage() {
 
   return (
     <div className="min-h-screen">
+      {/* Branded accent bar */}
+      <div className="h-1 bg-gradient-to-r from-primary via-primary-hover to-secondary" />
+
       <div className="mx-auto max-w-lg px-5 py-8">
         {/* Header */}
         <div className="mb-8 flex items-baseline justify-between">
-          <h1 className="font-serif text-2xl text-text">EQ Activities</h1>
-          <Link to="/results" className="text-sm text-text-muted hover:text-accent transition-colors">
+          <h1 className="font-serif text-2xl font-bold text-text">EQ Activities</h1>
+          <Link to="/results" className="text-sm text-secondary hover:text-secondary-hover transition-colors">
             Results →
           </Link>
         </div>
@@ -95,12 +120,12 @@ export default function SurveyPage() {
           {/* Activities */}
           <section>
             {errors.activities && (
-              <p className="mb-2 text-xs text-accent">{errors.activities}</p>
+              <p className="mb-2 text-xs text-error">{errors.activities}</p>
             )}
             {activities === undefined ? (
               <div className="grid grid-cols-3 gap-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="h-[100px] animate-pulse rounded-2xl bg-border/50" />
+                  <div key={i} className="h-[100px] animate-pulse rounded-xl bg-border-light" />
                 ))}
               </div>
             ) : (
@@ -116,32 +141,34 @@ export default function SurveyPage() {
                 ))}
               </div>
             )}
+            <SuggestionInput value={suggestion} onChange={setSuggestion} />
           </section>
 
           {/* Availability */}
           <section>
-            <h2 className="font-serif text-lg text-text mb-3">When works?</h2>
-            <AvailabilityPicker selected={availability} onToggle={toggleAvailability} />
+            <h2 className="font-serif text-lg font-semibold text-text mb-3">When works?</h2>
+            <AvailabilityPicker
+              selected={availability}
+              onToggleSlot={toggleAvailability}
+              onToggleDay={toggleDay}
+            />
           </section>
 
-          {/* Name + Suggestion */}
-          <section className="flex flex-col gap-3">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Your name (optional)"
-              autoComplete="name"
-              className="w-full rounded-xl bg-bg-card px-4 py-3 text-sm text-text placeholder-text-muted/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/20 transition-shadow"
-            />
-            <SuggestionInput value={suggestion} onChange={setSuggestion} />
-          </section>
+          {/* Name */}
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name (optional)"
+            autoComplete="name"
+            className="w-full rounded-lg bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-shadow"
+          />
 
           {/* Submit */}
           <button
             type="submit"
             disabled={submitting || (selectedIds.size === 0 && !suggestion.trim())}
-            className="w-full rounded-2xl bg-accent py-4 text-base font-semibold text-white shadow-sm transition-all duration-200 hover:bg-accent-hover active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed min-h-[56px]"
+            className="w-full rounded-lg bg-secondary py-4 text-sm font-semibold uppercase tracking-wide text-white shadow-sm transition-all duration-200 hover:bg-secondary-hover active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed min-h-[56px]"
           >
             {submitting ? 'Sending...' : 'Done'}
           </button>

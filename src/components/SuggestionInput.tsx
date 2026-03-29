@@ -15,7 +15,7 @@ export default function SuggestionInput({ value, onChange }: SuggestionInputProp
         onClick={() => setExpanded((e) => !e)}
         className="flex w-full items-center gap-2 py-2 text-left"
       >
-        <span className="text-sm text-text-muted">
+        <span className="text-sm text-secondary font-medium">
           {expanded ? '− Other idea?' : '+ Other idea?'}
         </span>
       </button>
@@ -25,7 +25,7 @@ export default function SuggestionInput({ value, onChange }: SuggestionInputProp
           onChange={(e) => onChange(e.target.value)}
           placeholder="Suggest an activity..."
           rows={2}
-          className="mt-1 w-full rounded-xl bg-bg-card px-4 py-3 text-sm text-text placeholder-text-muted/50 shadow-sm focus:outline-none focus:ring-2 focus:ring-accent/20 resize-none"
+          className="mt-1 w-full rounded-lg bg-white border border-border px-4 py-3 text-sm text-text placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-secondary/20 focus:border-secondary resize-none transition-shadow"
         />
       )}
     </div>

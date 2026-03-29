@@ -26,7 +26,7 @@ export default function QRCodeDisplay({ url }: QRCodeDisplayProps) {
       <button
         type="button"
         onClick={handleCopy}
-        className="text-xs text-text-muted hover:text-accent transition-colors"
+        className={`text-xs font-medium transition-colors ${copied ? 'text-primary' : 'text-secondary hover:text-secondary-hover'}`}
       >
         {copied ? 'Copied!' : 'Copy link'}
       </button>

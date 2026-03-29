@@ -1,11 +1,19 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 
+const availabilityEntryValidator = v.union(
+  v.string(),
+  v.object({
+    slotId: v.string(),
+    excludedDays: v.optional(v.array(v.string())),
+  })
+);
+
 export const submit = mutation({
   args: {
     memberName: v.optional(v.string()),
     selectedActivityIds: v.array(v.id("activities")),
-    availability: v.array(v.string()),
+    availability: v.array(availabilityEntryValidator),
     suggestedActivity: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -40,10 +48,27 @@ export const aggregatedResults = query({
       }
     }
 
+    const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
     const availabilityCounts: Record<string, number> = {};
+    const availabilityDayCounts: Record<string, Record<string, number>> = {};
+
     for (const r of responses) {
-      for (const slot of r.availability) {
-        availabilityCounts[slot] = (availabilityCounts[slot] || 0) + 1;
+      for (const entry of r.availability) {
+        const slotId = typeof entry === "string" ? entry : entry.slotId;
+        const excludedDays =
+          typeof entry === "string" ? [] : (entry.excludedDays ?? []);
+
+        availabilityCounts[slotId] = (availabilityCounts[slotId] || 0) + 1;
+
+        if (slotId.startsWith("weekday_")) {
+          if (!availabilityDayCounts[slotId]) availabilityDayCounts[slotId] = {};
+          for (const day of WEEKDAYS) {
+            if (!excludedDays.includes(day)) {
+              availabilityDayCounts[slotId][day] =
+                (availabilityDayCounts[slotId][day] || 0) + 1;
+            }
+          }
+        }
       }
     }
 
@@ -61,6 +86,7 @@ export const aggregatedResults = query({
       totalResponses: responses.length,
       activityCounts,
       availabilityCounts,
+      availabilityDayCounts,
       suggestions,
       activities: sortedActivities,
     };

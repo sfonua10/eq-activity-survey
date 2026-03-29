@@ -1,18 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #FAF7F2;
+  --color-bg: #FFFFFF;
+  --color-bg-alt: #EFF0F0;
   --color-bg-card: #FFFFFF;
-  --color-text: #2D2A26;
-  --color-text-muted: #8A8479;
-  --color-accent: #C2572A;
-  --color-accent-light: #FDF0EB;
-  --color-accent-hover: #A8461F;
-  --color-success: #4A7C59;
-  --color-border: #EDE8E0;
+  --color-bg-purple: #007DA5;
+  --color-bg-purple-dark: #005F7F;
 
-  --font-family-serif: 'DM Serif Display', Georgia, serif;
-  --font-family-sans: 'DM Sans', system-ui, sans-serif;
+  --color-text: #212225;
+  --color-text-secondary: #53575B;
+  --color-text-muted: #878A8C;
+
+  --color-primary: #007DA5;
+  --color-primary-hover: #0098C8;
+  --color-primary-active: #005F7F;
+  --color-primary-light: #E6F3F7;
+
+  --color-secondary: #006184;
+  --color-secondary-hover: #007DA5;
+  --color-secondary-active: #003057;
+  --color-secondary-light: #E6F3F7;
+
+  --color-success: #2D862D;
+  --color-success-light: #E8F5E8;
+  --color-error: #C4314B;
+
+  --color-border: #D1D3D4;
+  --color-border-light: #EFF0F0;
+
+  --font-family-serif: 'Source Serif 4', Georgia, serif;
+  --font-family-sans: 'Source Sans 3', system-ui, sans-serif;
 }
 
 @layer base {
@@ -25,4 +42,56 @@
   body {
     margin: 0;
   }
+}
+
+/* Light rays effect — CSS-only, emanating from top center */
+.light-rays {
+  position: relative;
+  overflow-x: hidden;
+}
+
+.light-rays::before {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: -10%;
+  width: 120%;
+  height: 90%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    /* Central warm glow */
+    radial-gradient(
+      ellipse 55% 55% at 50% 0%,
+      rgba(255, 223, 140, 0.14) 0%,
+      rgba(255, 223, 140, 0.05) 45%,
+      transparent 70%
+    ),
+    /* Conic rays fanning from the top */
+    conic-gradient(
+      from 180deg at 50% 0%,
+      transparent 0deg,
+      rgba(255, 223, 140, 0.08) 8deg,
+      transparent 18deg,
+      rgba(255, 255, 255, 0.07) 32deg,
+      transparent 42deg,
+      rgba(255, 223, 140, 0.06) 56deg,
+      transparent 68deg,
+      rgba(255, 255, 255, 0.05) 82deg,
+      transparent 93deg,
+      rgba(255, 223, 140, 0.07) 107deg,
+      transparent 118deg,
+      rgba(255, 255, 255, 0.06) 132deg,
+      transparent 144deg,
+      rgba(255, 223, 140, 0.08) 158deg,
+      transparent 168deg,
+      transparent 180deg
+    );
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 85%);
+  mask-image: linear-gradient(to bottom, black 0%, black 20%, transparent 85%);
+}
+
+.light-rays > * {
+  position: relative;
+  z-index: 1;
 }

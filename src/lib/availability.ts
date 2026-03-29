@@ -7,3 +7,10 @@ export const AVAILABILITY_SLOTS = [
 ] as const;
 
 export type AvailabilitySlotId = (typeof AVAILABILITY_SLOTS)[number]["id"];
+
+export const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"] as const;
+export type Weekday = (typeof WEEKDAYS)[number];
+
+export function isWeekdaySlot(slotId: string): boolean {
+  return slotId.startsWith("weekday_");
+}
